@@ -1,0 +1,124 @@
+﻿@model Bacchus.Models.Product
+
+@{
+    ViewData["Title"] = "Details";
+    DateTime endTime = DateTime.Parse(Model.biddingEndDate);
+}
+
+@Html.HiddenFor(model => model.productId)
+<dt class="col-sm-10">
+    @Html.DisplayNameFor(model => model.productName)
+</dt>
+<dd class="col-sm-10">
+    @Html.DisplayFor(model => model.productName)
+</dd>
+
+<dt class="col-sm-2">
+    @Html.DisplayNameFor(model => model.productDescription)
+</dt>
+<dd class="col-sm-10">
+    @Html.DisplayFor(model => model.productDescription)
+</dd>
+
+<dt class="col-sm-2">
+    @Html.DisplayNameFor(model => model.productCategory)
+</dt>
+<dd class="col-sm-10">
+    @Html.DisplayFor(model => model.productCategory)
+    @DateTime.Parse(Model.biddingEndDate)
+</dd>
+
+<dt class="col-sm-10">
+    @Html.DisplayNameFor(model => model.biddingEndDate)
+</dt>
+<dd class="col-sm-10">
+    @DateTime.Parse(Model.biddingEndDate).ToString("dddd, dd MMMM yyyy HH:mm:ss")
+</dd>
+
+<dd class="col-sm-10">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head runat="server">
+        <title></title>
+        <script type="text/javascript">
+
+            var tim;
+            
+            var interval = '@endTime.Subtract(DateTime.Now).TotalSeconds';
+
+            function timeFunc() {
+                showTime();
+            }
+
+            function showTime() {
+                var minutes = Math.floor(interval / 60);
+                var seconds = Math.floor(interval % 60);
+                if (interval <= 0) {
+                    document.getElementById("showtime").innerHTML = "Auction is over";
+                    document.getElementById("showtime").style.color = "red";
+                    clearTimeout(tim);
+                }
+                else {
+
+                    if (seconds < 10) {
+                        document.getElementById("showtime").innerHTML = minutes + ":" + "0" + seconds;
+                        interval = parseInt(interval) - 1;
+                        tim = setTimeout("showTime()", 1000);
+                    }
+                    else {
+                        document.getElementById("showtime").innerHTML = minutes + ":" + seconds;
+                        interval = parseInt(interval) - 1;
+                        tim = setTimeout("showTime()", 1000);
+                    }
+                }
+            }
+        </script>
+    </head>
+
+    <body onload="timeFunc()">
+        <form id="form1" runat="server">
+            <div>
+                <table width="100%" align="center">
+                    <tr>
+                        <td colspan="2">
+                            <h3> <div id="showtime"></div> </h3>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </form>
+    </body>
+    </html>
+</dd>
+
+
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.productId)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.lastBidderName, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.lastBidderName, new { htmlAttributes = new { @class = "form-control col-md-4" } })
+            @Html.ValidationMessageFor(model => model.lastBidderName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.lastBidderSum, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.lastBidderSum, new { htmlAttributes = new { @class = "form-control col-md-4" } })
+            @Html.ValidationMessageFor(model => model.lastBidderSum, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Make a bid" class="btn btn-primary" />
+        </div>
+    </div>
+}

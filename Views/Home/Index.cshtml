@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Bacchus.Models.Product>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@Html.Partial("Filter")
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.productName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.biddingEndDate)
+            </th>
+            <th>        
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.productName)
+                </td>
+                <td>
+                    @DateTime.Parse(item.biddingEndDate).ToString("dddd, dd MMMM yyyy HH:mm:ss")
+                </td>
+                <td>
+                    @Html.ActionLink("Make a bid", "Details", "Home", new { id = item.productId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
